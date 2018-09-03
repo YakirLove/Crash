@@ -39,7 +39,7 @@
 
 +(void)load
 {
-//    [self exchangeClassMethod:[self class] originMethodSel:@selector(yk_resolveClassMethod:) replaceMethodSel:@selector(resolveClassMethod:)];
+    [self exchangeClassMethod:[self class] originMethodSel:@selector(yk_resolveClassMethod:) replaceMethodSel:@selector(resolveClassMethod:)];
 }
 
 int classFunction(id target, SEL cmd, ...) {
