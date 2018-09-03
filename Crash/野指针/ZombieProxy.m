@@ -1,0 +1,131 @@
+//
+//  ZombieProxy.m
+//  Crash
+//
+//  Created by wyj on 2018/9/3.
+//  Copyright © 2018年 wyj. All rights reserved.
+//
+
+#import "ZombieProxy.h"
+#import "MethodForwardManager.h"
+
+@implementation ZombieProxy
+
+
+- (BOOL)respondsToSelector: (SEL)aSelector
+{
+    return [self.originClass instancesRespondToSelector:aSelector];
+}
+
+- (NSMethodSignature *)methodSignatureForSelector: (SEL)sel
+{
+    return [self.originClass instanceMethodSignatureForSelector:sel];
+}
+
+- (void)forwardInvocation: (NSInvocation *)invocation
+{
+    [self _throwMessageSentExceptionWithSelector: invocation.selector];
+}
+
+#define LXDZombieThrowMesssageSentException() [self _throwMessageSentExceptionWithSelector: _cmd]
+- (Class)class
+{
+    LXDZombieThrowMesssageSentException();
+    return nil;
+}
+
+- (BOOL)isEqual:(id)object
+{
+    LXDZombieThrowMesssageSentException();
+    return NO;
+}
+
+- (NSUInteger)hash
+{
+    LXDZombieThrowMesssageSentException();
+    return 0;
+}
+
+- (id)self
+{
+    LXDZombieThrowMesssageSentException();
+    return nil;
+}
+
+- (BOOL)isKindOfClass:(Class)aClass
+{
+    LXDZombieThrowMesssageSentException();
+    return NO;
+}
+
+- (BOOL)isMemberOfClass:(Class)aClass
+{
+    LXDZombieThrowMesssageSentException();
+    return NO;
+}
+
+- (BOOL)conformsToProtocol:(Protocol *)aProtocol
+{
+    LXDZombieThrowMesssageSentException();
+    return NO;
+}
+
+- (BOOL)isProxy
+{
+    LXDZombieThrowMesssageSentException();
+    
+    return NO;
+}
+
+- (id)retain
+{
+    LXDZombieThrowMesssageSentException();
+    return nil;
+}
+
+- (oneway void)release
+{
+    LXDZombieThrowMesssageSentException();
+}
+
+- (id)autorelease
+{
+    LXDZombieThrowMesssageSentException();
+    return nil;
+}
+
+- (void)dealloc
+{
+    LXDZombieThrowMesssageSentException();
+    [super dealloc];
+}
+
+- (NSUInteger)retainCount
+{
+    LXDZombieThrowMesssageSentException();
+    return 0;
+}
+
+- (NSZone *)zone
+{
+    LXDZombieThrowMesssageSentException();
+    return nil;
+}
+
+- (NSString *)description
+{
+    LXDZombieThrowMesssageSentException();
+    return nil;
+}
+
+
+#pragma mark - Private
+- (void)_throwMessageSentExceptionWithSelector: (SEL)selector
+{
+    NSLog(@"野指针");
+    NSString *string = [NSString stringWithFormat:@"[%@ %@]",[self originClass],NSStringFromSelector(selector)];
+    [[MethodForwardManager sharedInstance] recordMethodForward:string];
+//    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"(-[%@ %@]) was sent to a zombie object at address: %p", NSStringFromClass(self.originClass), NSStringFromSelector(selector), self] userInfo:nil];
+}
+
+@end
